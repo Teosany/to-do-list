@@ -7,56 +7,27 @@
     <script src="project.js" defer></script>
 <body>
 <?php
-const DB_HOST = 'localhost';
-const DB_USER = 'root';
-const DB_PASS = 'root';
-const DB_NAME = 'todo';
+include('database.class.php');
+include('taskManager.class.php');
 
-$errors = "";
+$dbh = new DataBase;
+$taskM = new TaskManager;
 
-try {
-    $dbh = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-    if (isset($_POST['submit'])) {
-        if (empty($_POST['task'])) {
-            $errors = "You must fill in the task";
-        } else {
-            $task = $_POST['task'];
-            $sql = "INSERT INTO tasks (task) VALUES (?)";
-
-            $query = $dbh->prepare($sql);
-//            $query->bindParam(':task', $task, PDO::PARAM_STR);
-            $query->execute([$task]) or die(print_r($dbh->errorInfo(), true));
-            header('location: index.php');
-        }
-    }
-    if (isset($_GET['del_task'])) {
-        $id = $_GET['del_task'];
-
-        $sql = "DELETE FROM tasks WHERE id=:id";
-
-        $query = $dbh->prepare($sql);
-//        $query->bindParam(':id', $id, PDO::PARAM_INT);
-        $query->execute([
-                'id' => $id
-        ]);
-
-        header('location: index.php');
-    }
-    if (isset($_GET['update_task'])) {
-        $id = $_GET['update_task'];
-
-        $sql = "UPDATE tasks SET status = 'Done' WHERE id=:id";
-
-        $query = $dbh->prepare($sql);
-        $query->bindParam(':id', $id, PDO::PARAM_INT);
-        $query->execute();
-
-        header('location: index.php');
+if (isset($_POST['submit'])) {
+    if (empty($_POST['task'])) {
+        $errors = "You must fill in the task";
+    } else {
+        $taskM->setDbh($dbh);
+        $taskM->addTask($_POST['task']);
     }
 }
-
-catch (PDOException $e) {
-    exit("Error: " . $e->getMessage());
+if (isset($_GET['del_task'])) {
+    $taskM->setDbh($dbh);
+    $taskM->delTask($_GET['del_task']);
+}
+if (isset($_GET['update_task'])) {
+    $taskM->setDbh($dbh);
+    $taskM->updateTask($_GET['update_task']);
 }
 ?>
 
@@ -84,15 +55,14 @@ catch (PDOException $e) {
     </thead>
     <tbody>
     <?php
-    $sql = $dbh->query("SELECT task, id, status FROM tasks");
-    $sql->setFetchMode(PDO::FETCH_ASSOC);
+    $taskM->setDbh($dbh);
+    $sql = $taskM->getAllTasks();
     $i = 1;
-
     while ($row = $sql->fetch()) : ?>
         <tr>
             <td> <?php echo $i; ?> </td>
             <td contenteditable="plaintext-only" class="task" type="radio"
-                id="<?php echo $row['id']?>"><?php echo $row['task']; ?></td>
+                id="<?php echo $row['id'] ?>"><?php echo $row['task']; ?></td>
             <td class="status"> <?php echo $row['status']; ?> </td>
             <?php
             if ($row['status'] != "Done" && $row['id'] != "") {
@@ -115,7 +85,7 @@ catch (PDOException $e) {
             </td>
         </tr>
         <?php $i++;
-    endwhile;?>
+    endwhile; ?>
     </tbody>
 </table>
 

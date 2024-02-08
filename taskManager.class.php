@@ -14,7 +14,6 @@ class TaskManager extends AbstructTaskManager
 
         $query = $this->_dbh->prepare($sql);
         $query->execute([$this->_product]) or die(print_r($this->_dbh->errorInfo(), true));
-        header('location: index.php');
     }
 
     public function editTask(string $task): void
@@ -55,7 +54,6 @@ class TaskManager extends AbstructTaskManager
             'id' => $id
         ]);
 
-        header('location: index.php');
     }
 
     public function updateTask(int $id): void
@@ -66,7 +64,6 @@ class TaskManager extends AbstructTaskManager
         $query->bindParam(':id', $id, PDO::PARAM_INT);
         $query->execute();
 
-        header('location: index.php');
     }
 
     public function getAllTasks()

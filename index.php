@@ -1,11 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <title>ToDo List</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
-    <script src="project.js" defer></script>
-<body>
 <?php
 
 spl_autoload_register(function ($class){
@@ -32,8 +24,14 @@ if (isset($_GET['update_task'])) {
     header('Location: index.php');
 }
 ?>
-
-
+<!doctype html>
+<html lang="en">
+<head>
+    <title>ToDo List</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
+    <script src="project.js" defer></script>
+<body>
 <div class="heading">
     <h2>ToDo List</h2>
 </div>

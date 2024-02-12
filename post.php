@@ -3,7 +3,7 @@ spl_autoload_register(function ($class){
     require_once($class.'.class.php');
 });
 
-$taskM = new TaskManager;
+$taskM = new taskManager;
 
 if (isset($_POST)) {
     $taskM->setId($_POST['id']);

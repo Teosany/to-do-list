@@ -9,7 +9,7 @@ class taskManager extends AbstructTaskManager
 
     public function __construct()
     {
-        $this->_dbh = new DataBase();
+        $this->_dbh = new dataBase();
     }
     public function getId()
     {

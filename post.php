@@ -1,6 +1,7 @@
 <?php
-spl_autoload_extensions(".class.php");
-spl_autoload_register();
+spl_autoload_register(function ($class){
+    require_once($class.'.class.php');
+});
 
 $taskM = new TaskManager;
 

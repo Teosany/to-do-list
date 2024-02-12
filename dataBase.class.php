@@ -1,5 +1,5 @@
 <?php
-class DataBase extends PDO {
+class dataBase extends PDO {
     private string $_DB_HOST = 'localhost';
     private string $_DB_USER = 'root';
     private string $_DB_PASS = 'root';

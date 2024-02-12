@@ -12,7 +12,7 @@ spl_autoload_register(function ($class){
     require_once($class.'.class.php');
 });
 
-$taskM = new TaskManager;
+$taskM = new taskManager;
 
 if (isset($_POST['submit'])) {
     if (empty($_POST['task'])) {

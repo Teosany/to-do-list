@@ -1,6 +1,6 @@
 <?php
 
-class TaskManager extends AbstructTaskManager
+class taskManager extends AbstructTaskManager
 {
     protected $_id;
     protected $_product;

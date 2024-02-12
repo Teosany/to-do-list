@@ -7,27 +7,31 @@
     <script src="project.js" defer></script>
 <body>
 <?php
-include('database.class.php');
-include('taskManager.class.php');
+function loadClass($class)
+{
+    require $class . '.class.php';
+}
 
-$dbh = new DataBase;
+spl_autoload_register('loadClass');
+
 $taskM = new TaskManager;
 
 if (isset($_POST['submit'])) {
     if (empty($_POST['task'])) {
         $errors = "You must fill in the task";
     } else {
-        $taskM->setDbh($dbh);
         $taskM->addTask($_POST['task']);
     }
+    $_POST['task'] = '';
+    header('Location: /index.php');
 }
 if (isset($_GET['del_task'])) {
-    $taskM->setDbh($dbh);
     $taskM->delTask($_GET['del_task']);
+    header('Location: /index.php');
 }
 if (isset($_GET['update_task'])) {
-    $taskM->setDbh($dbh);
     $taskM->updateTask($_GET['update_task']);
+    header('Location: /index.php');
 }
 ?>
 
@@ -55,37 +59,39 @@ if (isset($_GET['update_task'])) {
     </thead>
     <tbody>
     <?php
-    $taskM->setDbh($dbh);
-    $sql = $taskM->getAllTasks();
+    $row = $taskM->getAllTasks();
     $i = 1;
-    while ($row = $sql->fetch()) : ?>
-        <tr>
-            <td> <?php echo $i; ?> </td>
-            <td contenteditable="plaintext-only" class="task" type="radio"
-                id="<?php echo $row['id'] ?>"><?php echo $row['task']; ?></td>
-            <td class="status"> <?php echo $row['status']; ?> </td>
-            <?php
-            if ($row['status'] != "Done" && $row['id'] != "") {
-                ?>
-                <td class="update">
-                    <a href='index.php?update_task=<?php echo $row['id']; ?>'> y</a>
-                </td>
+    if (!empty($row)) :
+        foreach ($row as $task) : ?>
+            <tr>
+                <td> <?php echo $i; ?> </td>
+                <td contenteditable="plaintext-only" class="task" type="radio"
+                    id="<?php echo $task->getId(); ?>"><?php echo htmlentities($task->getProduct()); ?></td>
+                <td class="status"> <?php echo $task->getStatus(); ?> </td>
                 <?php
-            } else {
+                if ($task->getStatus() != "Done" && $task->getId() != "") {
+                    ?>
+                    <td class="update">
+                        <a href='index.php?update_task=<?php echo $task->getId(); ?>'> y</a>
+                    </td>
+                    <?php
+                } else {
+                    ?>
+                    <td class="none">
+                        <a href=""> </a>
+                    </td>
+                    <?php
+                }
                 ?>
-                <td class="none">
-                    <a href=""> </a>
+                <td class="delete">
+                    <a href='index.php?del_task=<?php echo $task->getId(); ?>' onclick="return confirm('Tu es sure?')">
+                        x</a>
                 </td>
-                <?php
-            }
-            ?>
-
-            <td class="delete">
-                <a href='index.php?del_task=<?php echo $row['id']; ?>'> x</a>
-            </td>
-        </tr>
-        <?php $i++;
-    endwhile; ?>
+            </tr>
+            <?php $i++;
+        endforeach;
+    endif;
+    ?>
     </tbody>
 </table>
 

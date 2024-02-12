@@ -1,13 +1,15 @@
 <?php
-include('database.class.php');
-include('taskManager.class.php');
+function loadClass($class)
+{
+    require $class . '.class.php';
+}
 
-$dbh = new DataBase;
+spl_autoload_register('loadClass');
+
 $taskM = new TaskManager;
 
 if (isset($_POST)) {
     $taskM->setId($_POST['id']);
-    $taskM->setDbh($dbh);
     $taskM->verifTask($_POST['product']);
 }
 ?>;

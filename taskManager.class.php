@@ -4,7 +4,25 @@ class TaskManager extends AbstructTaskManager
 {
     protected $_id;
     protected $_product;
+    protected $_status;
     protected $_dbh;
+
+    public function __construct()
+    {
+        $this->_dbh = new DataBase();
+    }
+    public function getId()
+    {
+        return $this->_id;
+    }
+    public function getProduct()
+    {
+        return $this->_product;
+    }
+    public function getStatus()
+    {
+        return $this->_status;
+    }
 
     public function addTask(string $task)
     {
@@ -68,19 +86,39 @@ class TaskManager extends AbstructTaskManager
 
     public function getAllTasks()
     {
-        $sql = $this->_dbh->query("SELECT task, id, status FROM tasks");
-        $sql->setFetchMode(PDO::FETCH_ASSOC);
-        return $sql;
+        $query = $this->_dbh->query("SELECT task, id, status FROM tasks");
+
+        $allResult = $query->fetchAll(PDO::FETCH_OBJ);
+
+        $allTasks = [];
+        foreach ($allResult as $elem) {
+            $obj = new TaskManager();
+            $obj->setId($elem->id);
+            $obj->setProduct($elem->task);
+            $obj->setStatus($elem->status);
+            $allTasks[] = $obj;
+        }
+
+        return $allTasks;
     }
 
     public function setId($id)
     {
-        return $this->_id = $id;
+        if (is_int($id) && $id > 0) {
+            $this->_id = $id;
+        }
     }
-
-    public function setDbh($dbh)
+    public function setProduct($product)
     {
-        return $this->_dbh = $dbh;
+        if (is_string($product) && strlen($product) > 0) {
+            $this->_product = $product;
+        }
+    }
+    public function setStatus($status)
+    {
+        if (is_string($status) && strlen($status) > 0) {
+            $this->_status = $status;
+        }
     }
 }
 

@@ -51,7 +51,6 @@ class TaskManager extends AbstructTaskManager
         $this->_product = $task;
 
         $sql = $this->_dbh->query("SELECT task FROM tasks WHERE id = " . $this->_id);
-
         $oldTask = $sql->fetch();
         $oldTask = $oldTask[0];
         if ($oldTask != $this->_product) {
@@ -98,27 +97,24 @@ class TaskManager extends AbstructTaskManager
             $obj->setStatus($elem->status);
             $allTasks[] = $obj;
         }
-
         return $allTasks;
     }
 
-    public function setId($id)
+    public function setId(int $id)
     {
-        if (is_int($id) && $id > 0) {
+        if ($id > 0) {
             $this->_id = $id;
         }
     }
-    public function setProduct($product)
+    public function setProduct(string $product)
     {
-        if (is_string($product) && strlen($product) > 0) {
+        if (strlen($product) > 0) {
             $this->_product = $product;
         }
     }
     public function setStatus($status)
     {
-        if (is_string($status) && strlen($status) > 0) {
             $this->_status = $status;
-        }
     }
 }
 
@@ -131,6 +127,6 @@ abstract class AbstructTaskManager
     abstract public function delTask(int $id);
 
     abstract public function updateTask(int $id);
-
+    abstract public function verifTask(string $task);
     abstract public function getAllTasks();
 }

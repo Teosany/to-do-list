@@ -1,10 +1,6 @@
 <?php
-function loadClass($class)
-{
-    require $class . '.class.php';
-}
-
-spl_autoload_register('loadClass');
+spl_autoload_extensions(".class.php");
+spl_autoload_register();
 
 $taskM = new TaskManager;
 

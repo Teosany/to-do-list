@@ -7,12 +7,9 @@
     <script src="project.js" defer></script>
 <body>
 <?php
-function loadClass($class)
-{
-    require $class . '.class.php';
-}
 
-spl_autoload_register('loadClass');
+spl_autoload_extensions(".class.php");
+spl_autoload_register();
 
 $taskM = new TaskManager;
 
@@ -23,15 +20,15 @@ if (isset($_POST['submit'])) {
         $taskM->addTask($_POST['task']);
     }
     $_POST['task'] = '';
-    header('Location: /index.php');
+    header('Location: index.php');
 }
 if (isset($_GET['del_task'])) {
     $taskM->delTask($_GET['del_task']);
-    header('Location: /index.php');
+    header('Location: index.php');
 }
 if (isset($_GET['update_task'])) {
     $taskM->updateTask($_GET['update_task']);
-    header('Location: /index.php');
+    header('Location: index.php');
 }
 ?>
 
